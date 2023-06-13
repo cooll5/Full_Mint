@@ -1,0 +1,36 @@
+const express = require("express");
+const router = express.Router();
+const Transaction = require("./schema")
+
+router.get("/transactions", (req, res)=>{
+    Transaction.find({})
+        .then(transaction => {
+            res.send(transaction);
+        })
+});
+
+router.post("/transactions", (req, res)=>{
+    Transaction.create(req.body)
+        .then(transaction => {
+            res.send(transaction);
+        })
+});
+
+router.put("/transactions/:id", (req, res)=>{
+    Transaction.findByIdAndUpdate({_id: req.params.id}, req.body)
+        .then(() => {
+            Transaction.findOne({_id: req.params.id})
+                .then(transaction => {
+                    res.send(transaction);
+                });
+        });
+});
+
+router.delete("/transactions/:id", (req, res)=>{
+    Transaction.deleteOne({_id: req.params.id})
+        .then(transaction => {
+            res.send(transaction);
+        });
+});
+
+module.exports = router;
